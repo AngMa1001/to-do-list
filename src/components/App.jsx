@@ -2,29 +2,24 @@ import React, {useState} from "react";
 import logo from '../logo.svg';
 import '../App.css';
 import Header from "./Header";
-import Todolist from "./ToDoList";
+import TodoCreate from "./TodoCreate";
+import List from "./List";
 import sessionTodoList, { getTodoList, saveTodoList } from "../util/TodoList";
-
-// 1. type todos press enter 
-// 2. store value as todos
-// 3. store todos into a todolist js
-// 4. todolist with comepleted, content, id keys
-// 5. show array of todos
-
-
 
 function App() {
   const [todoList, setTodoList] = useState(getTodoList());
   // localStorage.removeItem('todoList');
-  
+  console.log(getTodoList());
+  console.log(todoList);
   function addTodos(newTodos){
     setTodoList(prevList =>{
       if(prevList === null){
-        var createdTodos = createTodos(newTodos.content, 0);
+        const createdTodos = createTodos(newTodos.content, 0);
         saveTodoList(createdTodos);
         return [createdTodos];
       }else{
-        var createdTodos = createTodos(newTodos.content, todoList.length);
+        const generatedId = todoList[(todoList.length -1)]._id + 1;
+        const createdTodos = createTodos(newTodos.content, generatedId);
         saveTodoList([...prevList, createdTodos]);
         return [...prevList, createdTodos];
       }
@@ -40,20 +35,35 @@ function App() {
     return createdTodos;
   }
 
+  function deleteTodos(id){
+    setTodoList(prevList =>{
+      const deletedTodos = prevList.filter((todoItem) => {
+        return todoItem._id !== id
+      })
+      saveTodoList(deletedTodos);
+      return deletedTodos;
+    })
+  }
+
   return (
     <div className="app">
       <div className="content-wrapper">
         <Header />
         <div className="todo-wrapper">
-          <Todolist 
+          <TodoCreate 
             onAdd={addTodos}
           />
+          {todoList && todoList.map((todos) =>{
+            return todos && (
+              <List 
+                key={todos._id}
+                id={todos._id}
+                content={todos.content}
+                onDelete={deleteTodos}
+              />
+            )
+          })}
         </div>
-        {todoList && todoList.map((todos, index) =>{
-          return todos && (
-            <li key={todos._id}>{todos.content} {index}</li>
-          )
-        })}
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>

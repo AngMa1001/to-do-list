@@ -1,8 +1,8 @@
 import React , {useState} from "react";
-import TodoList, { getTodoList, saveTodoList } from "../util/TodoList";
 
 
-export default function ToDoList(props){
+
+export default function TodoCreate(props){
     const [todos, setTodos] = useState({
         content : ""
     });
@@ -16,15 +16,6 @@ export default function ToDoList(props){
         }else{
             console.log("not an enter");
         }
-        // console.log(props.onAdd());
-        // if(event.code === "Enter"){
-        //     setTodoList(previousTodos => {
-        //         return [...previousTodos, todos];
-        //     });
-        //     console.log(todoList);
-        // }else{
-        //     console.log("not an enter");
-        // }
     }
 
     function handleKeyDown(event){
