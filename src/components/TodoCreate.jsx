@@ -9,10 +9,12 @@ export default function TodoCreate(props){
 
     function handleAdd(event){
         if(event.code === "Enter"){
-            props.onAdd(todos);
-            setTodos({
-                content : ""
-            })
+            if(!todos.content.length < 1){
+                props.onAdd(todos);
+                setTodos({
+                    content : ""
+                })
+            }
         }else{
             console.log("not an enter");
         }
@@ -24,9 +26,9 @@ export default function TodoCreate(props){
         });
     }
     return(        
-        <input 
-        type="text"  
-        className="todo-input" 
+        <input
+        type="text"
+        className="todo-input"
         autoComplete="off"
         value={todos.content}
         onChange={handleKeyDown}

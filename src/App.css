@@ -1,23 +1,23 @@
 *{
   width: 100%;
 }
-.app{
-  display: flex;
-  flex-direction: column;
+body{
   background-color: hsl(220, 13%, 18%);
-  font-family: 'Indie Flower', cursive;
-  height: 100vh;
 }
-.header{
+.todolist-logo{
   text-align: center;
   font-weight: lighter;
   font-family: 'Caveat', cursive;
   color: #dcddc7;
+  font-size: 3rem;
+  padding: 1rem;
 }
-.header h1{
-  font-size: 7rem;
-  font-weight: lighter;
-  margin-bottom: .5rem;
+.app{
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  font-family: 'Indie Flower', cursive;
 }
 .todo-wrapper{
   background-color: #dcddc7;
@@ -57,13 +57,30 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
+  
 }
 
+.check-box{
+  background-color: black;
+}
 
+.complete-checkbox{
+  text-decoration: line-through;
+  opacity: .5;
+  transition: .3s;
+}
 
+.todo-footer{
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
-
-
+.list-selector{
+  display: flex;
+  flex-direction: row;
+}
 
 
 
