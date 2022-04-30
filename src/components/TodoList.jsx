@@ -3,16 +3,17 @@ import { Filter } from "../util/Filter";
 
 export default function TodoList(props){
     const [todoList , setTodoList] = useState([]);
-
+    
     useEffect(()=>{
-        setTodoList(Filter(props.todos, props.type))
-        
+        if(props.todos === null|| props.todos === undefined ||props.todos.length < 1){
+            setTodoList([]);
+        }else{
+            setTodoList(Filter(props.todos, props.type))
+        }
     }, [props.type, props.todos])
-
     function handleChange(e){
         setTodoList(prevList=>{
-            console.log(prevList.length);
-            props.todos.completed = !props.todos.completed
+            prevList.completed = !prevList.completed
             return Filter(props.todos, props.type)
         });
     }
@@ -22,7 +23,6 @@ export default function TodoList(props){
     }
 
     function handleComplete(id){
-        
         props.onComplete(id);
     }
 
@@ -31,19 +31,24 @@ export default function TodoList(props){
             {todoList && todoList.map((todo) =>{
                 return todo && (    
                     <div className="list-view" key={todo._id}>
-                        <input 
-                        onClick={()=>{
-                            handleComplete(todo._id);
-                        }} 
-                        onChange={handleChange} 
-                        checked={todo.completed} 
-                        type="checkbox" 
-                        className="check-box" 
-                        />
+                        <div className="todo-checkbox">
+                            <input 
+                            onClick={()=>{
+                                handleComplete(todo._id);
+                            }} 
+                            onChange={handleChange} 
+                            checked={todo.completed} 
+                            type="checkbox" 
+                            id={todo._id}/>
+                            <label htmlFor={todo._id}></label>
+                        </div>
                         <li className={todo.completed ? "complete-checkbox":" " }>{todo.content}</li>
-                        <button onClick={()=>{
-                            handleDelete(todo._id);
-                        }}>X</button>
+                        <div className="delete-btn">
+                            <button onClick={()=>{
+                                handleDelete(todo._id);
+                            }}>X
+                            </button>
+                        </div>
                     </div>
                 )   
             })}
@@ -51,7 +56,3 @@ export default function TodoList(props){
         </div>
     )
 }
-
-// {filteredList && filteredList.map((todos) =>{
-//     return todos && (    )   
-//             })}

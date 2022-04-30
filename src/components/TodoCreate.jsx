@@ -29,6 +29,7 @@ export default function TodoCreate(props){
         <input
         type="text"
         className="todo-input"
+        placeholder="What needs to be done?"
         autoComplete="off"
         value={todos.content}
         onChange={handleKeyDown}

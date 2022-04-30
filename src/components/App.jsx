@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import logo from '../logo.svg';
 import '../App.css';
@@ -6,7 +6,8 @@ import TodoCreate from "./TodoCreate";
 import TodoList from "./TodoList";
 import { getTodoList, saveTodoList } from "../util/TodoList";
 import ListSelector from "./ListSelector";
-import { Filter } from "../util/Filter";
+import ClearCompleted from "./ClearCompleted";
+import LeftTodos from "./LeftTodos";
 
 function App() {
   // Route view. Return main components
@@ -18,36 +19,59 @@ function App() {
         />
         <TodoList
           type={type}
-          todos={todoList}
+          todos={todoList.todos}
           onDelete={deleteTodos}
           onComplete={completeTodos}
         />
         <div className="todo-footer">
-          <ListSelector />
+          <LeftTodos 
+          leftCount={todoList.leftCount}
+          />
+          <ListSelector
+          type={type}
+          />
+          <ClearCompleted
+          onDelete={clearCompleted}
+          />
         </div>
       </div>
     )
   }
 
   //App
-  const [todoList, setTodoList] = useState(getTodoList());
-
+  const [todoList, setTodoList] = useState({
+    todos : getTodoList() === null ? [] : getTodoList(),
+    leftCount : countLeft(getTodoList())
+  });
   // localStorage.removeItem('todoList');
-  // console.log(todoList); 
-  // console.log(getTodoList());
+  
+  function countLeft(todos){
+    let count = 0;
+    if(todos === undefined || todos === null){
+      count = 0;
+    }else{
+      for(let i =0; i<todos.length;i++){
+        if(!todos[i].completed){
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
   function addTodos(newTodos){
     setTodoList(prevList =>{
-      if(prevList === undefined || prevList === null || prevList.length < 1){
-        console.log("trigger add from none");
+      if(prevList.todos === undefined || prevList.todos === null || prevList.todos.length < 1){
+        console.log("Add from none");
         const createdTodos = createTodos(newTodos.content, 0);
-        saveTodoList(createdTodos);
-        return [createdTodos];
+        saveTodoList([createdTodos]);
+        return {todos : getTodoList(), leftCount : countLeft(getTodoList())};
       }else{
-        console.log("trigger add from prev");
-        const generatedId = todoList[(todoList.length -1)]._id + 1;
+        console.log("Add from prev");
+        const generatedId = prevList.todos[prevList.todos.length -1]._id + 1;
         const createdTodos = createTodos(newTodos.content, generatedId);
-        saveTodoList([...prevList, createdTodos]);
-        return [...prevList, createdTodos];
+        saveTodoList([...prevList.todos, createdTodos]);
+        return {todos: getTodoList(), leftCount : countLeft(getTodoList())};
       }
     })
   }
@@ -58,29 +82,37 @@ function App() {
       content: content,
       completed : false
     }
-    console.log(createdTodos);
     return createdTodos;
+  }
+  
+  function completeTodos(id){
+    setTodoList(prevList =>{
+      for(let i=0;i<prevList.todos.length;i++){
+        if(id === prevList.todos[i]._id){
+          prevList.todos[i].completed =  !prevList.todos[i].completed;
+          console.log(prevList.todos[i]);
+        } 
+      }
+      saveTodoList(prevList.todos);
+      return {todos : getTodoList(), leftCount : countLeft(prevList.todos)};
+    })
   }
 
   function deleteTodos(id){
     setTodoList(prevList =>{
-      const deletedTodos = prevList.filter((todoItem) => {
+      const deletedTodos = prevList.todos.filter(todoItem => {
         return todoItem._id !== id;
       })
       saveTodoList(deletedTodos);
-      return deletedTodos;
+      return {todos : getTodoList(), leftCount : countLeft(getTodoList())};
       })
   }
 
-  function completeTodos(id){
+  function clearCompleted(){
     setTodoList(prevList =>{
-      for(let i=0;i<prevList.length;i++){
-        if(id === prevList[i]._id){
-          prevList[i].completed =  !prevList[i].completed;
-        } 
-      }
-      saveTodoList(prevList);
-      return prevList
+      const deletedTodos = prevList.todos.filter(todo => todo.completed === false);
+      saveTodoList(deletedTodos);
+      return {todos : getTodoList(), leftCount : countLeft(getTodoList())};
     })
   }
   
