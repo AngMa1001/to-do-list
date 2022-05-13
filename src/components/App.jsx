@@ -22,6 +22,7 @@ function App() {
           todos={todoList.todos}
           onDelete={deleteTodos}
           onComplete={completeTodos}
+          onToggleAll={toggleAll}
         />
         <div className="todo-footer">
           <LeftTodos 
@@ -44,6 +45,7 @@ function App() {
     leftCount : countLeft(getTodoList())
   });
   // localStorage.removeItem('todoList');
+  
   
   function countLeft(todos){
     let count = 0;
@@ -90,8 +92,29 @@ function App() {
       for(let i=0;i<prevList.todos.length;i++){
         if(id === prevList.todos[i]._id){
           prevList.todos[i].completed =  !prevList.todos[i].completed;
-          console.log(prevList.todos[i]);
         } 
+      }
+      saveTodoList(prevList.todos);
+      return {todos : getTodoList(), leftCount : countLeft(prevList.todos)};
+    })
+  }
+
+  function toggleAll(){
+    setTodoList(prevList =>{  
+      let count = 0
+      prevList.todos.map(todo=>{
+        if(todo.completed){
+          count++;
+        }
+      })
+      if(count === prevList.todos.length){
+        prevList.todos.map(todo=>{
+          todo.completed = false;
+        })
+      }else{
+        prevList.todos.map(todo=>{
+          todo.completed = true;
+        })
       }
       saveTodoList(prevList.todos);
       return {todos : getTodoList(), leftCount : countLeft(prevList.todos)};
@@ -119,7 +142,6 @@ function App() {
   return (
     <section className="app">
       <h1 className="todolist-logo">TodoList</h1>
-
       <Router>
         <Routes>
           <Route path="/"  element={routeComponent("all")}></Route>
@@ -127,7 +149,6 @@ function App() {
           <Route path="/completed" element={routeComponent("completed")}></Route>
         </Routes>
       </Router>
-
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>

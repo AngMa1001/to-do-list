@@ -21,13 +21,19 @@ export default function TodoList(props){
     function handleDelete(id){
         props.onDelete(id);
     }
-
     function handleComplete(id){
         props.onComplete(id);
     }
 
+    function toggleAll(){
+        props.onToggleAll();
+    }
     return(
-        <div>
+        <div className="todo-list-wrapper">
+            <div className="toggle-all">
+                <input onClick={toggleAll} id="toggle-all" type="checkbox" />
+                <label htmlFor="toggle-all"></label>
+            </div>
             {todoList && todoList.map((todo) =>{
                 return todo && (    
                     <div className="list-view" key={todo._id}>
@@ -43,16 +49,12 @@ export default function TodoList(props){
                             <label htmlFor={todo._id}></label>
                         </div>
                         <li className={todo.completed ? "complete-checkbox":" " }>{todo.content}</li>
-                        <div className="delete-btn">
-                            <button onClick={()=>{
-                                handleDelete(todo._id);
-                            }}>X
-                            </button>
-                        </div>
+                        <img onClick={()=>{
+                            handleDelete(todo._id);
+                        }} src="./img/delete_icon.png" alt="delete" className="delete-btn"/>
                     </div>
                 )   
             })}
-            
         </div>
     )
 }

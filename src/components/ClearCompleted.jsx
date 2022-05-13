@@ -5,7 +5,7 @@ export default function ClearCompleted(props){
     props.onDelete();
   }
     return(
-        <div className="list-selector">
+        <div className="footer-selector">
           <li onClick={clearAll}>Clear completed</li>
         </div>
     )

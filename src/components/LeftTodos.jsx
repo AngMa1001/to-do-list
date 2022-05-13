@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 
 export default function LeftTodos(props){
   return(
-      <div className="list-selector">
+      <div className="footer-selector">
         <li>{props.leftCount} todos left </li>
       </div>
   )
