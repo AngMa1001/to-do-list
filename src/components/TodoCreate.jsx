@@ -10,10 +10,12 @@ export default function TodoCreate(props){
     function handleAdd(event){
         if(event.code === "Enter"){
             if(!todos.content.length < 1){
+                console.log(todos);
                 props.onAdd(todos);
                 setTodos({
                     content : ""
                 })
+                console.log(todos);
             }
         }else{
             console.log("not an enter");

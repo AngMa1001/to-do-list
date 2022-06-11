@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import logo from '../logo.svg';
 import '../App.css';
@@ -24,7 +24,7 @@ function App() {
           onComplete={completeTodos}
           onToggleAll={toggleAll}
         />
-        <div className="todo-footer">
+        <div className="todo-footer" style={{display: todoList.todos === null ||todoList.todos.length < 1 ? "none":""}}>
           <LeftTodos 
           leftCount={todoList.leftCount}
           />
@@ -42,10 +42,9 @@ function App() {
   //App
   const [todoList, setTodoList] = useState({
     todos : getTodoList() === null ? [] : getTodoList(),
-    leftCount : countLeft(getTodoList())
+    leftCount : countLeft(getTodoList()),
   });
   // localStorage.removeItem('todoList');
-  
   
   function countLeft(todos){
     let count = 0;
@@ -64,12 +63,10 @@ function App() {
   function addTodos(newTodos){
     setTodoList(prevList =>{
       if(prevList.todos === undefined || prevList.todos === null || prevList.todos.length < 1){
-        console.log("Add from none");
         const createdTodos = createTodos(newTodos.content, 0);
         saveTodoList([createdTodos]);
         return {todos : getTodoList(), leftCount : countLeft(getTodoList())};
       }else{
-        console.log("Add from prev");
         const generatedId = prevList.todos[prevList.todos.length -1]._id + 1;
         const createdTodos = createTodos(newTodos.content, generatedId);
         saveTodoList([...prevList.todos, createdTodos]);
@@ -92,7 +89,7 @@ function App() {
       for(let i=0;i<prevList.todos.length;i++){
         if(id === prevList.todos[i]._id){
           prevList.todos[i].completed =  !prevList.todos[i].completed;
-        } 
+        }
       }
       saveTodoList(prevList.todos);
       return {todos : getTodoList(), leftCount : countLeft(prevList.todos)};
@@ -101,19 +98,20 @@ function App() {
 
   function toggleAll(){
     setTodoList(prevList =>{  
-      let count = 0
+      let count = 0;
       prevList.todos.map(todo=>{
         if(todo.completed){
           count++;
         }
+        return count
       })
       if(count === prevList.todos.length){
         prevList.todos.map(todo=>{
-          todo.completed = false;
+          return todo.completed = false;
         })
       }else{
         prevList.todos.map(todo=>{
-          todo.completed = true;
+          return todo.completed = true;
         })
       }
       saveTodoList(prevList.todos);
@@ -138,20 +136,20 @@ function App() {
       return {todos : getTodoList(), leftCount : countLeft(getTodoList())};
     })
   }
-  
+
   return (
     <section className="app">
-      <h1 className="todolist-logo">TodoList</h1>
+      <h1 className="todolist-logo">todos</h1>
       <Router>
         <Routes>
-          <Route path="/"  element={routeComponent("all")}></Route>
+          <Route path="/" element={routeComponent("all")}></Route>
           <Route path="/active" element={routeComponent("active")}></Route>
           <Route path="/completed" element={routeComponent("completed")}></Route>
         </Routes>
       </Router>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+      <footer className="app-footer">
+        <img src={logo} className="react-logo" alt="logo" />
+      </footer>
     </section>
   );
 }

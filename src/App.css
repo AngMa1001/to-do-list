@@ -1,15 +1,15 @@
 *{
   width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
 }
-body{
-  background-color: hsl(220, 13%, 18%);
+html{
+  background: #F5F5F5;
 }
 .todolist-logo{
   text-align: center;
-  font-weight: lighter;
-  font-family: 'Caveat', cursive;
-  color: #dcddc7;
-  font-size: 3rem;
+  color: #e9d2d0;
+  font-size: 6rem;
   padding: 1rem 0rem;
 }
 .app{
@@ -17,8 +17,8 @@ body{
   display: flex;
   flex-direction: column;
   font-size: 18px;
+  position: relative;
   width: 40%;
-  font-family: 'Coming Soon', cursive;
 }
 .todo-wrapper{
   background-color: white;
@@ -27,13 +27,9 @@ body{
 }
 
 .todo-input{
-  font-weight: lighter;
-  font-family: 'Coming Soon', cursive;
   border: none;
-  font-style: italic;
-  font-size: 20px;
-  font-weight: 100;
-  padding: 1rem .75rem 1rem 3rem;
+  font-size: 24px;
+  padding: 1rem .75rem 1rem 3.3rem;
   border: 0;
   align-items: center;
   position: relative;
@@ -43,11 +39,41 @@ body{
   border-bottom: 1px solid rgb(216, 216, 216);
 }
 .todo-input::placeholder{
+  font-style: italic;
   color: rgb(209, 209, 209);
 }
 .todo-wrapper input:focus{
   outline: none;
 }
+
+.todo-list-wrapper{
+  position: relative;
+}
+.toggle-all input{
+  position: absolute;
+  visibility: hidden;
+}
+.toggle-all label{
+  position: absolute;
+  width: fit-content;
+  top: -45px;
+  left: 3px;
+  transition: .2s;
+  font-size: 24px;
+  transform: rotate(90deg);
+  color: rgb(192, 192, 192);
+}
+.toggle-all label:hover{
+  color: #5c5c5c;
+}
+.toggle-all .focused {
+  color: #5c5c5c;
+}
+.toggle-all label::before{
+  content: "❯";
+  padding: 0rem 1rem;
+}
+
 .content-wrapper{
   max-width: 30rem;
   margin: auto;
@@ -59,17 +85,58 @@ body{
   border-bottom: 1px solid rgb(216, 216, 216);
   box-sizing: border-box;
   align-items: center;
+  position: relative;
   display: flex;
   flex-direction: row;
+}
+.list-content{
+  transition: 0.2s;
+  color: black;
+}
+.list-view .complete-checkbox{
+  text-decoration: line-through;
+  opacity: .5;
+}
+.delete-btn {
+  width: 24px;
+  justify-content: right;
+  visibility: hidden;
+  opacity: 0.8;
+}
+.list-view:hover .delete-btn{
+  visibility: visible;
+  
+}
+
+.list-view .delete-btn {
+	visibility: hidden;
+  position: absolute;
+  font-size: 2.5rem;
+  top: 1px;
+  right: 10px;
+	color: #cc9a9a;
+}
+.list-view .delete-btn:after {
+  content: '×';
+}
+
+.delete-btn:hover {
+	color: #af5b5e;
+}
+
+
+.list-view:hover .delete-btn {
+  visibility: visible;
+}
+
+
+.list-view li{
+  font-size: 1.4rem;
 }
 .list-view:first-child{
   border-top: 4px solid rgb(216, 216, 216);
 }
-.complete-checkbox{
-  text-decoration: line-through;
-  opacity: .5;
-  transition: .3s;
-}
+
 .todo-checkbox {
   position: relative;
   width: 3rem;
@@ -83,10 +150,14 @@ body{
   border: 1px solid #ccc;
   border-radius: 50%;
   position: absolute;
+  transition: .2s;
   left: 0;
-  top: 0;
+  top: -2px;
   height: 24px;
   width: 24px;
+}
+.todo-checkbox label:hover{
+  border-color: rgb(139, 139, 139);
 }
 
 .todo-checkbox label:after {
@@ -111,16 +182,41 @@ body{
 .todo-checkbox input[type="checkbox"]:checked + label:after {
   opacity: 1;
 }
+.emptyCheck {
+  display: none;
+}
+
+
 
 .todo-footer{
   box-sizing: border-box;
   text-align: center;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
   font-size: 14px;
-  padding: .5rem 1rem;
+  padding: .7rem 1rem;
+  position: relative;
+  z-index: 2;
 }
+
+.todo-footer:after {
+	content: '';
+	position: absolute;
+  z-index: -1;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 50px;
+	overflow: hidden;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+	            0 8px 0 -3px #f6f6f6,
+	            0 9px 1px -3px rgba(0, 0, 0, 0.2),
+	            0 16px 0 -6px #f6f6f6,
+	            0 17px 2px -6px rgba(0, 0, 0, 0.2);
+}
+
 .todo-footer a{
   font-size: 14px;
 }
@@ -129,83 +225,103 @@ body{
   display: flex;
   flex-direction: row;
 }
-.footer-selector:nth-child(2){
+.footer-selector a{
+  cursor: pointer;
+  padding: 3px 7px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+.footer-selector a:hover{
+  border-color: #ebe4e3;
+}
+.filters{
   gap: 1rem;
 }
-.footer-selector:last-child{
+.footer-selector:first-child li{
+  border: none;
+  cursor: default;
+}
+.footer-selector:last-child li{
+  border: none;
   cursor: pointer;
 }
-.delete-btn {
-  width: 24px;
-  justify-content: right;
+.footer-selector:last-child:hover{
+  text-decoration: underline;
 }
-.todo-list-wrapper{
-  position: relative;
-}
-.toggle-all input{
-  position: absolute;
-  visibility: hidden;
-
-}
-.toggle-all label{
-  position: absolute;
-  width: fit-content;
-  top: -50px;
-  left: 0;
-  font-size: 24px;
-  transform: rotate(90deg);
-  color: rgb(209, 209, 209);
-  
-}
-.toggle-all label::before{
-  content: "❯";
-  padding: 0rem 1rem;
+.footer-selector .list-selected{
+  border-color: #EBD9D8;
 }
 
+@media all and (max-width: 1250px){
+  .app{
+    width: 50%;
+  }
+}
 
+@media all and (max-width: 900px){
+  .app{
+    width: 60%;
+  }
+  .filters{
+    gap: .3rem;
+  }
+}
+@media all and (max-width: 768px){
+  .app{
+    width: 80%;
+  }
+  .list-view .delete-btn{
+    visibility: visible;
+  }
+}
+@media all and (max-width: 500px){
+  .todo-input::placeholder{
+    font-size: 20px;
+  }
+  .list-view li{
+    font-size: 20px;
+  }
+  .todo-footer a{
+    font-size: 12px;
+  }
+  .footer-selector li{
+    font-size: 12px;
+  }
+  .filters{
+    order: -1;
+    flex:1 0 100%;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid rgb(216, 216, 216);
+  }
+  .footer-selector:nth-child(1){
+    order: 1;
+    padding-top: .5rem;
+    margin-left: 20px;
 
+  }
+  .footer-selector:nth-child(3){
+    padding-top: .5rem;
+    margin-right: 20px;
+    order: 2;
+  }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.App-logo {
+.react-logo {
   height: 5rem;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 5s linear;
-  }
+
+.react-logo {
+  animation: react-logo-spin infinite 10s linear;
 }
 
-.App-header {
+.app-footer {
+  margin-top: 2rem;
   align-items: center;
   justify-content: center;
 }
-@keyframes App-logo-spin {
+@keyframes react-logo-spin {
   from {
     transform: rotate(0deg);
   }
@@ -213,3 +329,4 @@ body{
     transform: rotate(360deg);
   }
 }
+
