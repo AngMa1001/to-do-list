@@ -149,6 +149,9 @@ function App() {
       </Router>
       <footer className="app-footer">
         <img src={logo} className="react-logo" alt="logo" />
+        <div className="footer-content">
+          <p>Personal project by <a href="https://www.linkedin.com/in/david-yoon-937567204/" target="_blank">David Yoon</a></p>
+        </div>
       </footer>
     </section>
   );

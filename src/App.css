@@ -320,6 +320,16 @@ html{
   margin-top: 2rem;
   align-items: center;
   justify-content: center;
+  text-align: center;
+}
+.footer-content{
+  margin-top: 2rem;
+  font-size: 12px;
+  color: #999999;
+}
+.footer-content a {
+  font-size: 12px;
+  color: #464646;
 }
 @keyframes react-logo-spin {
   from {
